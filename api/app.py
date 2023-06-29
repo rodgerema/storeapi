@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask import jsonify
 from flask import request
@@ -8,7 +9,7 @@ from mergedeep import merge, Strategy
 app = Flask(__name__)
 
 mongo_dbname = os.getenv("MONGO_DB", "restdb")
-mongo_uri = os.getenv("MONGO_URI", "mongodb://127.0.0.1:27017")
+mongo_uri = os.getenv("MONGO_URI", "mongodb://mongodb:27017")
 
 app.config["MONGO_DBNAME"] = mongo_dbname
 app.config["MONGO_URI"] = f"{mongo_uri}/{mongo_dbname}"
@@ -21,6 +22,16 @@ def saved_format(req):
         return {"key": req["key"], "data": req["data"], "tags": req["tags"]}
     else:
         return req
+
+@app.route('/api/ping/<host>', methods=['GET'])
+def check_ping(host):
+    hostname = host
+    response = os.system("ping -c 1 " + hostname)
+    if response == 0:
+        pingstatus = "The host is reachable"
+    else:
+        pingstatus = "The host is unreachable"
+    return pingstatus
 
 
 @app.route("/api/get", methods=["GET"])
@@ -50,9 +61,8 @@ def add_saved():
     if "tags" not in req_json:
         req_json["tags"] = {}
     saved.delete_one({"key": req_json["key"]})
-    #saved_id = saved.insert(req_json)
-    saved_id = saved.insert_one{mydict}
-    new_saved = saved.find_one({"_id": saved_id})
+    insert_result = saved.insert_one(req_json)
+    new_saved = saved.find_one({"_id": insert_result.inserted_id})
     return jsonify({"result": saved_format(new_saved)})
 
 
@@ -67,11 +77,13 @@ def update_saved():
     fo = saved.find_one({"key": req_json["key"]})
     saved_id = ""
     if not fo:
-        saved_id = saved.insert(req_json)
+        insert_result = saved.insert_one(req_json)
+        saved_id = insert_result.inserted_id
     else:
         merge(fo, req_json, strategy=Strategy.REPLACE)
         saved.delete_one({"key": req_json["key"]})
-        saved_id = saved.insert(fo)
+        insert_result = saved.insert_one(fo)
+        saved_id = insert_result.inserted_id
     new_saved = saved.find_one({"_id": saved_id})
     return jsonify({"result": saved_format(new_saved)})
 
