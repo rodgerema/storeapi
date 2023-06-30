@@ -144,3 +144,9 @@ In only one file you can build and run your applications executing only one comm
  ✔ Container mongodb         Started                                                                                                                                                              0.4s
  ✔ Container storeapi        Started                                                                                                                                                              0.7s
 ```
+
+# (5) PING method
+
+An additional [method](https://github.com/rodriguezemanuel/storeapi/blob/main/api/README.md#apiping:~:text=tags%22%3A%20%7B%7D%0A%20%20%20%20%7D%0A%7D-,/api/ping/,-GET%20method%20to) was added to the API. This method can be used to test connectivity to external hosts.
+
+<img width="499" alt="image" src="https://github.com/rodriguezemanuel/storeapi/assets/137838409/fee7a185-b288-41e7-985a-10863882096b">
