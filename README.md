@@ -69,7 +69,7 @@ curl --location --request GET 'http://127.0.0.1:5000/api/get'
 ```
 
 ## Usage
-This api has few methods to add / get / update information.
+This api has few methods to add / get / update information, and additional capability to test connectivity to external hosts.
 
 ### /api/get
 GET method to retrieve all keys in our database.
@@ -161,4 +161,18 @@ $ curl --location --request PUT 'http://<IP>:<PORT>/api/update' \
         "tags": {}
     }
 }
+```
+
+### /api/ping/<host>
+GET method to test connectivity with external hosts.
+```bash
+$ curl --location --request GET 'http://<IP>:<PORT>/api/ping/8.8.8.8'
+
+The host is reachable
+
+# WRONG OR DEAD HOST
+
+$ curl --location --request GET 'http://<IP>:<PORT>/api/ping/7.7.7.7'
+
+The host is unreachable
 ```
