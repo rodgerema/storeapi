@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  api:
+    container_name: storeapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: storeapi
+    ports:
+      - "5000:5000"
+    links:
+      - "mongodb"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - "27017:27017"
+  
